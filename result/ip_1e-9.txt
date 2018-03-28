@@ -1,0 +1,11 @@
+
+Classifier is loading data...
+email cnt: spam 34280, ham 17416
+
+Setting up Naive Bayes classifier...
+vocabulary size: 175346
+feature cnt: spam 5518613, ham 2436417
+type prob: spam -0.410818, ham -1.087991
+Setup finished!
+
+Checking on train set...
