@@ -5,6 +5,9 @@
 - 语言：Python
 - 环境：Python 3.6.2rc1
 
+## 数据集来源
+- [2006 TREC Public Spam Corpora](https://plg.uwaterloo.ca/~gvcormac/treccorpus06/)
+
 ## 文件结构
 
 - scripts/目录下为实验脚本
@@ -14,7 +17,7 @@
     - defs.py包含一些常量定义
     - test.py包含少量单元测试，予以了保留
     - autoTest.bat为自动测试用脚本，用于收集issue1, 2所需数据
-- 如需运行，scripts/目录应该与数据集解压后的目录trec06c-utf8/处于同一级
+- 如需运行，scripts/目录应该与数据集解压后的目录`trec06c-utf8/`处于同一级
 
 ## 运行方法
 
