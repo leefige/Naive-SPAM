@@ -1,5 +1,4 @@
 from parseData import *
-from train import *
 
 def testParse():
 
@@ -21,19 +20,19 @@ def testLoad():
     print(valid[0])
 
 
-def testList():
-    list_all, list_spam, list_ham = loadTopWordLists()
-    cnt_all = getTopCnt(list_all, 1)
-    print(list_all[0])
-    print(list_all[cnt_all - 1])
+# def testList():
+#     list_all, list_spam, list_ham = loadTopWordLists()
+#     cnt_all = getTopCnt(list_all, 1)
+#     print(list_all[0])
+#     print(list_all[cnt_all - 1])
 
-    cnt_spam = getTopCnt(list_spam, 1)
-    print(list_spam[0])
-    print(list_spam[cnt_spam - 1])
+#     cnt_spam = getTopCnt(list_spam, 1)
+#     print(list_spam[0])
+#     print(list_spam[cnt_spam - 1])
 
-    cnt_ham = getTopCnt(list_ham, 1)
-    print(list_ham[0])
-    print(list_ham[cnt_ham - 1])
+#     cnt_ham = getTopCnt(list_ham, 1)
+#     print(list_ham[0])
+#     print(list_ham[cnt_ham - 1])
 
 # def testTrain():
     # lt, lv = getDataSet()
@@ -60,4 +59,4 @@ def transList():
         jsonData = json.dumps(list_ham, ensure_ascii=False)
         fout.write(jsonData)
     
-testList()
+testLoad()

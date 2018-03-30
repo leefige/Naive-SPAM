@@ -126,6 +126,7 @@ def __readEmail(root, dirName, fileName):
         contentStart = False
         for line in fin:
             line = line.strip()
+            info['hour'] = "null"
             # parse ip
             if re.match(r'Received: from.*', line):
                 ipRe = re.search(r'\[.*\]', line, flags=0)
@@ -134,6 +135,13 @@ def __readEmail(root, dirName, fileName):
                     info['ip'] = ip
                 else:
                     info['ip'] = ""
+            # parse time
+            if re.match(r'Date: .*', line):
+                if not contentStart:
+                    ipRe = re.findall(r'\d+:', line, flags=0)
+                    if len(ipRe) > 0:
+                        hour = ipRe[0].strip(":")
+                        info['hour'] = hour
             # assume that blank line means content starts
             elif re.match(r'^$', line):
                 contentStart = True

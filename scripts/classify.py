@@ -1,18 +1,18 @@
 from defs import *
 from parseData import * 
 from naiveBayes import *
-import random, sys, getopt
+import random, sys, getopt, time
 
 class Classifier:
 
-    def __init__(self, trainWeight=0.8, smooth=1.0, addition=False, update=False):
+    def __init__(self, trainWeight=0.8, smooth=1.0, addition=False, useTime=False, update=False):
         self.dataLoaded = False
         self.bayes = None
-        self.initialize(trainWeight, smooth, addition, update)
+        self.initialize(trainWeight, smooth, addition, useTime, update)
         self.bayes.setup()
         return
 
-    def initialize(self, trainWeight, smooth, addition, update):
+    def initialize(self, trainWeight, smooth, addition, useTime, update):
         if not self.dataLoaded:
             print("\nClassifier is loading data...")
             # trainSet = loadDataSet("train")
@@ -22,7 +22,8 @@ class Classifier:
             
             totalSpam = 0
             totalHam = 0
-
+            
+            # ip
             ip_spam = {}
             ip_ham = {}
 
@@ -42,6 +43,26 @@ class Classifier:
             ipSet = set(ip_spam)
             ipSet.union(set(ip_ham))
             ipSize = len(ipSet)
+
+            # time (hour)
+            time_spam = {}
+            time_ham = {}
+
+            for email in trainSet:
+                hour = email['info']['hour']
+                if email['label'] == "spam":
+                    if hour not in time_spam:
+                        time_spam[hour] = 0
+                    time_spam[hour] += 1
+                elif email['label'] == "ham":
+                    if hour not in time_ham:
+                        time_ham[hour] = 0
+                    time_ham[hour] += 1
+
+            timeSet = set(time_spam)
+            timeSet.union(set(time_ham))
+            timeSize = len(timeSet)
+
             print("smooth factor: %e" % (smooth))
             print("train set weight: %f" % (trainSetWeight))
             print("email cnt: spam %d, ham %d" % (totalSpam, totalHam))
@@ -50,7 +71,8 @@ class Classifier:
 
             self.bayes = NaiveBayes(spamCnt=totalSpam, hamCnt=totalHam, smooth=smooth,
                 wordList_all=topList_all, wordList_ham=topList_ham, wordList_spam=topList_spam,
-                ip_spam=ip_spam, ip_ham=ip_ham, ip_size=ipSize, addition=addition)
+                ip_spam=ip_spam, ip_ham=ip_ham, ip_size=ipSize, addition=addition,
+                time_spam=time_spam, time_ham=time_ham, time_size=timeSize, use_time=useTime)
             
             self.dataLoaded = True
         return
@@ -102,17 +124,25 @@ if __name__ == '__main__':
     trainSetWeight = 0.8
     smooth = 1.0
     addition = False
+    useTime = False
 
     argv = sys.argv[1:]
-    opts, args = getopt.getopt(argv,"s:w:i")
+    opts, args = getopt.getopt(argv,"s:w:it")
     for opt, arg in opts:
-      if opt == "-i":
-          addition = True
-      elif opt == "-s":
-         smooth = float(arg)
-      elif opt == "-w":
-         trainSetWeight = float(arg)
+        if opt == "-i":
+            addition = True
+        elif opt == "-t":
+            useTime = True
+        elif opt == "-s":
+            smooth = float(arg)
+        elif opt == "-w":
+            trainSetWeight = float(arg)
 
-    cl = Classifier(trainSetWeight, smooth, addition, update=True)
+    print("-------------------------------------------")
+    print("# time:", time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()) )
+    print("# args: train_weight %f, smooth %e, addition" % (trainSetWeight, smooth), addition)
+    
+    cl = Classifier(trainSetWeight, smooth, addition=addition, useTime=useTime, update=True)
     cl.checkOnTrainSet()
-    cl.validate()
+    if trainSetWeight < 1.0:
+        cl.validate()

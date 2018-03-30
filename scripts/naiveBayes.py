@@ -3,7 +3,9 @@ import math
 # Naive Bayes Classifier
 class NaiveBayes:
     # init
-    def __init__(self, spamCnt, hamCnt, wordList_all=None, wordList_spam=None, wordList_ham=None, ip_spam=None, ip_ham=None, ip_size=0, smooth=1.0, addition=False):
+    def __init__(self, spamCnt, hamCnt, wordList_all=None, wordList_spam=None, wordList_ham=None, 
+        ip_spam=None, ip_ham=None, ip_size=0, smooth=1.0, addition=False,
+        time_spam=None, time_ham=None, time_size=None, use_time=False):
         # setup flag
         self.__initialized = False
 
@@ -19,13 +21,18 @@ class NaiveBayes:
         self.__cnt_spam = spamCnt
         self.__cnt_ham = hamCnt
         self.__addition = addition
+        self.__use_time = use_time
 
         self.__ip_spam = ip_spam
         self.__ip_ham = ip_ham
 
+        self.__time_spam = time_spam
+        self.__time_ham = time_ham
+
         # core values
         self.__vocabularySize = 0
         self.__ipPoolSize = ip_size
+        self.__timePoolSize = time_size
         self.__total_spam = 0
         self.__total_ham = 0
 
@@ -76,6 +83,7 @@ class NaiveBayes:
         
         words = email['info']['words']
         ip = email['info']['ip']
+        time = email['info']['hour']
 
         score = [self.__prob_spam, self.__prob_ham]
 
@@ -83,6 +91,11 @@ class NaiveBayes:
             # add ip
             score[0] += self.__calcIPProb_spam(ip)
             score[1] += self.__calcIPProb_ham(ip)
+        
+        if self.__use_time:
+            # add time
+            score[0] += self.__calcTimeProb_spam(ip)
+            score[1] += self.__calcTimeProb_ham(ip)
         
         # calc score for each word
         for word in words:
@@ -123,3 +136,11 @@ class NaiveBayes:
     def __calcIPProb_ham(self, ip):
         cnt = self.__ip_ham[ip] if ip in self.__ip_ham.keys() else 0
         return math.log((cnt + self.__laplaceFac) / (self.__cnt_ham + self.__laplaceFac * self.__ipPoolSize))
+
+    def __calcTimeProb_spam(self, time):
+        cnt = self.__time_spam[time] if time in self.__time_spam.keys() else 0
+        return math.log((cnt + self.__laplaceFac) / (self.__cnt_spam + self.__laplaceFac * self.__timePoolSize))
+    
+    def __calcTimeProb_ham(self, time):
+        cnt = self.__time_ham[time] if time in self.__time_ham.keys() else 0
+        return math.log((cnt + self.__laplaceFac) / (self.__cnt_ham + self.__laplaceFac * self.__timePoolSize))

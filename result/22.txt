@@ -1,0 +1,29 @@
+-------------------------------------------
+# time: 2018-03-29 03:16:42
+# args: train_weight 0.800000, smooth 1.000000e-02, addition False
+
+Classifier is loading data...
+loading allData from dumped file...
+Finished!
+smooth factor: 1.000000e-02
+train set weight: 0.800000
+email cnt: spam 34212, ham 17484
+
+Setting up Naive Bayes classifier...
+vocabulary size: 176000
+feature cnt: spam 5470341, ham 2443839
+type prob: spam -0.412804, ham -1.084094
+Setup finished!
+
+Checking on train set...
+count: 51696, correct: 51139, accuracy: 0.989225
+SPAM: precision: 0.990498, recall: 0.993248, F1: 0.991871
+HAM: precision: 0.986716, recall: 0.981354, F1: 0.984028
+Finished!
+
+Validating...
+count: 12924, correct: 12728, accuracy: 0.984834
+SPAM: precision: 0.987194, recall: 0.990164, F1: 0.988677
+HAM: precision: 0.980028, recall: 0.974078, F1: 0.977044
+Finished!
+
